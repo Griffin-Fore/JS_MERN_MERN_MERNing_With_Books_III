@@ -34,12 +34,12 @@ const Home = () => {
                 </thead>
                 <tbody>
                     {
-                        books.map((book, index) => (
-                            <tr key={index}>
+                        books.map(book => (
+                            <tr key={book._id}>
                                 <td>{book.title}</td>
                                 <td>{book.author}</td>
                                 <td>{book.pages}</td>
-                                <td>{book.isAvailable ? "yes" : "no"}</td>
+                                <td style={{ color: book.isAvailable ? "green" : "red" }}>{book.isAvailable ? "yes" : "no"}<Link to={`/book/${book._id}/update`}>Edit</Link></td>
                                 <td><Link to={`/book/${book._id}/details`}><button>Book Details</button></Link></td>
                             </tr>
                         ))

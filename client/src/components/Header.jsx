@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router"
 
-const Header = ({title}) => {
+const Header = ({title, updateTitle}) => {
     const navigate = useNavigate()
 
     const navigateToCatalog = () => {
@@ -20,6 +20,7 @@ const Header = ({title}) => {
             {window.location.pathname === '/' && <h1>Book Catalog</h1>}
             {window.location.pathname === '/book/create' && <h1>Add a Book</h1>}
             {window.location.pathname.includes('details') && <h1>{title}</h1>}
+            {window.location.pathname.includes('update') && <h1>Update {updateTitle}</h1>}
         </>
     )
 }

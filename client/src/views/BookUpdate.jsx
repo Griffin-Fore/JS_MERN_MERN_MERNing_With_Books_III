@@ -1,15 +1,30 @@
-import { useState } from 'react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
+const BookUpdate = ({setUpdateTitle}) => {
 
-const BookForm = () => {
-    // names must be the same as the fields in the model
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("")
     const [pages, setPages] = useState(1)
     const [isAvailable, setIsAvailable] = useState(false)
+    const { id } = useParams();
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+
+    useEffect(() => {
+        axios.get(`http://localhost:8000/api/books/${id}`)
+        .then(res=>{
+            console.log(res.data);
+            setTitle(res.data.title);
+            setAuthor(res.data.author);
+            setPages(res.data.pages);
+            setIsAvailable(res.data.isAvailable);
+            setUpdateTitle(res.data.title);
+        })
+        .catch((err)=> {
+            console.log(err,"error message");
+        })
+    },[id])
 
     const titleHandler = (e) => {
         setTitle(e.target.value);
@@ -29,21 +44,20 @@ const BookForm = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-
-        axios.post('http://localhost:8000/api/books', {
+        axios.patch(`http://localhost:8000/api/books/${id}`, {
             title,
             author,
             pages,
             isAvailable
         })
-        .then(res => {
+        .then( res => {
             console.log(res);
-            console.log(res.data);
             navigate("/");
         })
         .catch(err => {
             console.log(err);
-            console.log("error messages: ", err.response.data.errors);
+            console.log("error messages");
+            console.log(err.response.data.errors);
             setErrors(err.response.data.errors);
         })
     }
@@ -57,7 +71,7 @@ const BookForm = () => {
 
                 <label htmlFor="author">Author Name</label>
                 <input type="text" id="author" name="author" value={author} onChange={authorHandler}/>
-                {errors.author && <p style={{color: "red"}}>{errors.title.message}</p>}
+                {errors.author && <p style={{color: "red"}}>{errors.author.message}</p>}
 
                 <label htmlFor="pages">Page Count</label>
                 <input type="number" id="pages" name="pages" value={pages} onChange={pagesHandler}/>
@@ -66,11 +80,11 @@ const BookForm = () => {
                 <label htmlFor="isAvailable">Is it Available</label>
                 <input type="checkbox" id="isAvailable" name="isAvailable" checked={isAvailable} onChange={isAvailableHandler}/>
                 <button>
-                    Add Book!
+                    Update
                 </button>
             </form>
         </div>
     )
 }
 
-export default BookForm
+export default BookUpdate

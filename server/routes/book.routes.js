@@ -13,7 +13,7 @@ router.route('/books')
 
 router.route('/books/:id')
     .get(getOneBook)
-    .put(editOneBook)
+    .patch(editOneBook)
     .delete(deleteBook)
 
 export default router;
